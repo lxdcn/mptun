@@ -541,15 +541,15 @@ inet_to_tun(struct tundev *tdev, int index) {
 		}
 	}
 
-	rn = mptun_decrypt(buf, n, outbuff, tdev->key, tdev->ti);
+	// rn = mptun_decrypt(buf, n, outbuff, tdev->key, tdev->ti);
 
-	if (rn < 0) {
-		tdev->invalid += n;
-		return;
-	}
+	// if (rn < 0) {
+		// tdev->invalid += n;
+		// return;
+	// }
 
 	for (;;) {
-		int ret = tun_write(tunfd, outbuff, rn);
+		int ret = tun_write(tunfd, buf, n);
 		if (ret < 0) {
 			if (errno == EINTR) {
 				continue;
@@ -665,14 +665,14 @@ tun_to_inet(struct tundev *tdev, fd_set *wt) {
 		}
 	}
 
-	n = mptun_encrypt(buf, n, outbuf, tdev->key, tdev->ti);
-	if (n < 0) {
-		fprintf(stderr, "Invalid tun package size %d", (int)n);
-		return;
-	}
+	// n = mptun_encrypt(buf, n, outbuf, tdev->key, tdev->ti);
+	// if (n < 0) {
+		// fprintf(stderr, "Invalid tun package size %d", (int)n);
+		// return;
+	// }
 
 	for (;;) {
-		int ret = sendto(inetfd, outbuf, n, 0, (struct sockaddr *)addr, sizeof(SOCKADDR));
+		int ret = sendto(inetfd, buf, n, 0, (struct sockaddr *)addr, sizeof(SOCKADDR));
 		if (ret < 0 && errno == EINTR) {
 			continue;
 		} else {
@@ -796,6 +796,7 @@ ifconfig(const char * ifname, const char * va, const char *pa) {
 	snprintf(cmd, sizeof(cmd), "ifconfig %s %s netmask 255.255.255.255 pointopoint %s",
 		ifname, va, pa);
 #endif
+  printf("Executing `%s`\n", cmd);
 	if (system(cmd) < 0) {
 		perror(cmd);
 		exit(1);
