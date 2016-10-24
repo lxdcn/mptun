@@ -645,8 +645,8 @@ ifconfig(const char * ifname, const char * va, const char *pa) {
 	snprintf(cmd, sizeof(cmd), "ifconfig %s %s %s mtu 1380 netmask 255.255.255.255 up",
 		ifname, va, pa);
 #else
-	snprintf(cmd, sizeof(cmd), "ifconfig %s %s netmask 255.255.255.255 pointopoint %s",
-		ifname, va, pa);
+	snprintf(cmd, sizeof(cmd), "ifconfig %s %s netmask 255.255.255.255",
+		ifname, va);
 #endif
   printf("Executing `%s`\n", cmd);
 	if (system(cmd) < 0) {
